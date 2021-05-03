@@ -1,25 +1,30 @@
 package com.example.android.recyclerview
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.annotation.UiThread
+import androidx.lifecycle.*
+import com.example.android.common.logger.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class RecyclerViewFragmentViewModel : ViewModel() {
+class RecyclerViewFragmentViewModel(private val repo: ArticleRepository): ViewModel() {
     // Expose to the outside world
     private val post: MutableLiveData<ResultOf<Post>> by lazy {
         MutableLiveData<ResultOf<Post>>().also {
-            kotlin.runCatching {
                 fetchPost()
-            }.exceptionOrNull()
         }
     }
     val resultOfPost: LiveData<ResultOf<Post>> = post
+
+    fun refreshUI(listOfArticle: List<Article>?) {
+        Log.d("TAG", "refreshUI: ")
+        if (listOfArticle != null && listOfArticle.isNotEmpty()) {
+            //TODO comparing two list (remote vs local) with update date properties https://stackoverflow.com/questions/52054104/comparing-two-lists-in-kotlin
+            repo.save(listOfArticle)
+        }
+    }
 
     private fun fetchPost() {
         val service = RetrofitFactory.makeRetrofitService()
@@ -41,11 +46,11 @@ class RecyclerViewFragmentViewModel : ViewModel() {
         }
     }
 
-    class Factory() : ViewModelProvider.Factory {
+    class Factory(private val repo: ArticleRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(RecyclerViewFragmentViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return RecyclerViewFragmentViewModel() as T
+                return RecyclerViewFragmentViewModel(repo) as T
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
         }

@@ -28,6 +28,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import com.example.android.common.logger.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 /**
  * Demonstrates the use of [RecyclerView] with a [LinearLayoutManager] and a
@@ -43,7 +50,15 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerViewFragment : Fragment() {
 
-    private val viewModel by lazy { ViewModelProvider(this, RecyclerViewFragmentViewModel.Factory()).get(RecyclerViewFragmentViewModel::class.java) }
+    private val viewModel by lazy {
+        val db = Room.databaseBuilder(
+                context!!,
+                CarDatabase::class.java, "db"
+        ).build()
+
+        ViewModelProvider(this, RecyclerViewFragmentViewModel.Factory(
+                ArticleRepository.getInstance(db.articleDao())
+        )).get(RecyclerViewFragmentViewModel::class.java) }
     private lateinit var currentLayoutManagerType: LayoutManagerType
     private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: RecyclerView.LayoutManager
@@ -140,18 +155,25 @@ class RecyclerViewFragment : Fragment() {
      * from a local content provider or remote server.
      */
     private fun initDataset() {
-       // TODO API request
-        // observe result from the ViewModel
         viewModel.resultOfPost.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
-                // there is no need for type-casting, the compiler already knows that
                 is ResultOf.Success -> {
-                    Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
+                    if (result.value.content!!.isNotEmpty()) {
+                        viewModel.refreshUI(result.value.content)
+                        Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
 //                    adapter.submitList(result.value)
+                    } else {
+                        CoroutineScope(Dispatchers.IO).launch{
+                            Room.databaseBuilder(
+                                    context!!,
+                                    CarDatabase::class.java, "db"
+                            ).build().clearAllTables()
+                        }
+                    }
                 }
                 // here as well
                 is ResultOf.Failure -> {
-                    Toast.makeText(context, "ERROR", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "ERROR ${result.message}", Toast.LENGTH_SHORT).show()
 //                    showErrorMessage(result.message ?: "Unknown error message")
                 }
             }
