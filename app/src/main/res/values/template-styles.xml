@@ -18,7 +18,11 @@
 
     <!-- Activity themes -->
 
-    <style name="Theme.Base" parent="android:Theme.Light" />
+    <style name="Theme.Base" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:colorPrimary">#3d000000</item>
+        <item name="android:colorPrimaryDark">@android:color/black</item>
+        <item name="colorAccent">@android:color/darker_gray</item>
+    </style>
 
     <style name="Theme.Sample" parent="Theme.Base" />
 
@@ -33,7 +37,6 @@
     </style>
 
     <style name="Widget.SampleMessageTile">
-        <item name="android:background">@drawable/tile</item>
         <item name="android:shadowColor">#7F000000</item>
         <item name="android:shadowDy">-3.5</item>
         <item name="android:shadowRadius">2</item>

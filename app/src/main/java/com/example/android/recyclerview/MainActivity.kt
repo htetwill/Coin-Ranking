@@ -20,6 +20,7 @@ package com.example.android.recyclerview
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import android.widget.ViewAnimator
 
@@ -29,14 +30,6 @@ import com.example.android.common.logger.LogFragment
 import com.example.android.common.logger.LogWrapper
 import com.example.android.common.logger.MessageOnlyLogFilter
 
-/**
- * A simple launcher activity containing a summary sample description, sample log and a custom
- * [android.support.v4.app.Fragment] which can display a view.
- *
- *
- * For devices with displays with a width of 720dp or greater, the sample log is always visible,
- * on other devices it's visibility is controlled by an item on the Action Bar.
- */
 class MainActivity : SampleActivityBase() {
 
     // Whether the Log Fragment is currently shown

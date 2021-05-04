@@ -1,19 +1,34 @@
 package com.example.android.recyclerview
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import java.lang.Exception
 
 class ArticleRepository private constructor(private val dao : ArticleDao){
+    private val pagedListConfig = PagedList.Config.Builder()
+            .setPageSize(20)
+            .setEnablePlaceholders(false)
+            .build()
 
     fun save(articles: List<Article>){
         CoroutineScope(Dispatchers.IO).launch {
             dao.insertAll(articles)
         }
     }
+
+    fun getList(): LiveData<PagedList<Article>> {
+        val factory: DataSource.Factory<Int, Article> = dao.getAll()
+        return LivePagedListBuilder<Int, Article>(factory, pagedListConfig).build()
+
+    }
+
     companion object {
         // For Singleton instantiation
         @Volatile private var instance: ArticleRepository? = null

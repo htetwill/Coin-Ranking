@@ -29,12 +29,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import com.example.android.common.logger.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 /**
  * Demonstrates the use of [RecyclerView] with a [LinearLayoutManager] and a
@@ -50,6 +47,7 @@ import kotlin.coroutines.coroutineContext
 
 class RecyclerViewFragment : Fragment() {
 
+    private val mAdapter = CustomAdapter()
     private val viewModel by lazy {
         val db = Room.databaseBuilder(
                 context!!,
@@ -97,8 +95,8 @@ class RecyclerViewFragment : Fragment() {
         }
         setRecyclerViewLayoutManager(currentLayoutManagerType)
         // Set CustomAdapter as the adapter for RecyclerView.
-        recyclerView.adapter = CustomAdapter(dataset)
-
+        recyclerView.adapter = mAdapter
+        viewModel.pagedList.observe(viewLifecycleOwner, Observer { articles -> mAdapter.submitList(articles) })
         rootView.findViewById<RadioButton>(R.id.linear_layout_rb).setOnClickListener{
             setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER)
         }
@@ -163,7 +161,7 @@ class RecyclerViewFragment : Fragment() {
                         Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
 //                    adapter.submitList(result.value)
                     } else {
-                        CoroutineScope(Dispatchers.IO).launch{
+                        CoroutineScope(Dispatchers.IO).launch {
                             Room.databaseBuilder(
                                     context!!,
                                     CarDatabase::class.java, "db"

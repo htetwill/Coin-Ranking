@@ -16,13 +16,9 @@
 
 package com.example.android.recyclerview
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-
-import com.example.android.common.logger.Log
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 
 /**
  * Provide views to RecyclerView with data from dataSet.
@@ -31,44 +27,29 @@ import com.example.android.common.logger.Log
  *
  * @param dataSet String[] containing the data to populate views to be used by RecyclerView.
  */
-class CustomAdapter(private val dataSet: Array<String>) :
-        RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-
-    /**
-     * Provide a reference to the type of views that you are using (custom ViewHolder)
-     */
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val textView: TextView
-
-        init {
-            // Define click listener for the ViewHolder's View.
-            v.setOnClickListener { Log.d(TAG, "Element $adapterPosition clicked.") }
-            textView = v.findViewById(R.id.textView)
-        }
+class CustomAdapter : PagedListAdapter<Article,ArticleViewHolder>(object : DiffUtil
+.ItemCallback<Article>() {
+    override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+//                TODO : impl logic with updated
+        return false
     }
 
-    // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view.
-        val v = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.text_row_item, viewGroup, false)
-
-        return ViewHolder(v)
+    override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+//                TODO : impl logic with updated
+        return false
     }
+})
+{
 
-    // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        Log.d(TAG, "Element $position set.")
-
-        // Get element from your dataset at this position and replace the contents of the view
-        // with that element
-        viewHolder.textView.text = dataSet[position]
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
+        return ArticleViewHolder.from(parent)
     }
-
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
 
     companion object {
         private val TAG = "CustomAdapter"
+    }
+
+    override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
+        holder.setValue(getItem(position))
     }
 }

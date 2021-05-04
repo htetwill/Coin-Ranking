@@ -2,6 +2,7 @@ package com.example.android.recyclerview
 
 import androidx.annotation.UiThread
 import androidx.lifecycle.*
+import androidx.paging.PagedList
 import com.example.android.common.logger.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,8 @@ class RecyclerViewFragmentViewModel(private val repo: ArticleRepository): ViewMo
                 fetchPost()
         }
     }
+
+    val pagedList: LiveData<PagedList<Article>> = repo.getList()
     val resultOfPost: LiveData<ResultOf<Post>> = post
 
     fun refreshUI(listOfArticle: List<Article>?) {
