@@ -29,7 +29,7 @@ class RecyclerViewFragmentViewModel(private val repo: ArticleRepository): ViewMo
         }
     }
 
-    private fun fetchPost() {
+    fun fetchPost() {
         val service = RetrofitFactory.makeRetrofitService()
         CoroutineScope(Dispatchers.IO).launch {
             try {

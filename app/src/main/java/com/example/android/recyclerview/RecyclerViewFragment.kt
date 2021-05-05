@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -29,6 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.example.android.recyclerview.databinding.RecyclerViewFragBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,36 +56,22 @@ class RecyclerViewFragment : Fragment() {
 
         ViewModelProvider(this, RecyclerViewFragmentViewModel.Factory(
                 ArticleRepository.getInstance(db.articleDao())
-        )).get(RecyclerViewFragmentViewModel::class.java) }
+        )).get(RecyclerViewFragmentViewModel::class.java)
+    }
     private lateinit var currentLayoutManagerType: LayoutManagerType
-    private lateinit var recyclerView: RecyclerView
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var dataset: Array<String>
+    private var _binding: RecyclerViewFragBinding? = null
+    private val binding get() = _binding!!
 
-    enum class LayoutManagerType { GRID_LAYOUT_MANAGER, LINEAR_LAYOUT_MANAGER }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // Initialize dataset, this data would usually come from a local content provider or
-        // remote server.
-
-        dataset = Array(DATASET_COUNT, { i -> "This is element # $i" })
-    }
+    enum class LayoutManagerType {  LINEAR_LAYOUT_MANAGER }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.recycler_view_frag,
-                container, false).apply { tag = TAG}
-
-        recyclerView = rootView.findViewById(R.id.recyclerView)
-
-        // LinearLayoutManager is used here, this will layout the elements in a similar fashion
-        // to the way ListView would layout elements. The RecyclerView.LayoutManager defines how
-        // elements are laid out.
+        _binding = RecyclerViewFragBinding.inflate(inflater, container, false)
+        val rootView = binding.root
         layoutManager = LinearLayoutManager(activity)
-
         currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER
 
         if (savedInstanceState != null) {
@@ -93,50 +79,23 @@ class RecyclerViewFragment : Fragment() {
             currentLayoutManagerType = savedInstanceState
                     .getSerializable(KEY_LAYOUT_MANAGER) as LayoutManagerType
         }
-        setRecyclerViewLayoutManager(currentLayoutManagerType)
-        // Set CustomAdapter as the adapter for RecyclerView.
-        recyclerView.adapter = mAdapter
-        viewModel.pagedList.observe(viewLifecycleOwner, Observer { articles -> mAdapter.submitList(articles) })
-        rootView.findViewById<RadioButton>(R.id.linear_layout_rb).setOnClickListener{
-            setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER)
-        }
 
-        rootView.findViewById<RadioButton>(R.id.grid_layout_rb).setOnClickListener{
-            setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER)
+        binding.swiperefresh.setOnRefreshListener {
+            viewModel.fetchPost()
         }
+        binding.recyclerView.adapter = mAdapter
+        viewModel.pagedList.observe(viewLifecycleOwner, Observer { articles -> mAdapter.submitList(articles) })
+        setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER)
         initDataset()
 
         return rootView
     }
 
-    /**
-     * Set RecyclerView's LayoutManager to the one given.
-     *
-     * @param layoutManagerType Type of layout manager to switch to.
-     */
     private fun setRecyclerViewLayoutManager(layoutManagerType: LayoutManagerType) {
-        var scrollPosition = 0
-
-        // If a layout manager has already been set, get current scroll position.
-        if (recyclerView.layoutManager != null) {
-            scrollPosition = (recyclerView.layoutManager as LinearLayoutManager)
-                    .findFirstCompletelyVisibleItemPosition()
-        }
-
-        when (layoutManagerType) {
-            RecyclerViewFragment.LayoutManagerType.GRID_LAYOUT_MANAGER -> {
-                layoutManager = GridLayoutManager(activity, SPAN_COUNT)
-                currentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER
-            }
-            RecyclerViewFragment.LayoutManagerType.LINEAR_LAYOUT_MANAGER -> {
-                layoutManager = LinearLayoutManager(activity)
-                currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER
-            }
-        }
-
-        with(recyclerView) {
+        layoutManager = LinearLayoutManager(activity)
+        currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER
+        with(binding.recyclerView) {
             layoutManager = this@RecyclerViewFragment.layoutManager
-            scrollToPosition(scrollPosition)
         }
 
     }
@@ -145,6 +104,7 @@ class RecyclerViewFragment : Fragment() {
 
         // Save currently selected layout manager.
         savedInstanceState.putSerializable(KEY_LAYOUT_MANAGER, currentLayoutManagerType)
+
         super.onSaveInstanceState(savedInstanceState)
     }
 
@@ -157,10 +117,11 @@ class RecyclerViewFragment : Fragment() {
             when (result) {
                 is ResultOf.Success -> {
                     if (result.value.content!!.isNotEmpty()) {
+                        binding.swiperefresh.isRefreshing = false
                         viewModel.refreshUI(result.value.content)
                         Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
-//                    adapter.submitList(result.value)
                     } else {
+                        binding.swiperefresh.isRefreshing = false
                         CoroutineScope(Dispatchers.IO).launch {
                             Room.databaseBuilder(
                                     context!!,
@@ -176,6 +137,11 @@ class RecyclerViewFragment : Fragment() {
                 }
             }
         })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {

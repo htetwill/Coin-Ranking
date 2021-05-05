@@ -24,6 +24,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/lorem_ipsum"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <View
@@ -38,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
-            android:text="TextView"
+            android:text="@string/lorem_ipsum"
             android:textSize="20sp"
             android:paddingTop="4sp"
             android:paddingBottom="4sp"
@@ -51,14 +52,14 @@
             />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/txt_datetime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="24dp"
             android:fontFamily="@font/roboto"
-            android:text="25.05.2018 14:13"
+            android:text="@string/datetime_sample"
             android:textColor="#acacac"
             android:textSize="14sp"
             android:paddingTop="3sp"
@@ -80,7 +81,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="24dp"
         android:fontFamily="@font/roboto"
-        android:text="The Audi Q7 is masculine, yet exudes lightness. Inside, it offers comfort at the highest level. With even more space for your imagination. The 3.0 TDI engine accelerates this powerhouse as a five-seater starting at an impressive 6.3 seconds from 0 to 100 km/h."
+        android:text="@string/lorem_ipsum"
         android:textSize="14sp"
         android:paddingTop="3sp"
         android:paddingBottom="3sp"
