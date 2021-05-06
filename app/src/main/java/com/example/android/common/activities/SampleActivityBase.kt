@@ -33,18 +33,18 @@ open class SampleActivityBase : FragmentActivity() {
 
     override fun onStart() {
         super.onStart()
-        initializeLogging()
+//        initializeLogging()
     }
 
-    /** Set up targets to receive log data  */
-    open fun initializeLogging() {
-        // Using Log, front-end to the logging chain, emulates android.util.log method signatures.
-        // Wraps Android's native log framework
-        val logWrapper = LogWrapper()
-        Log.logNode = logWrapper
-
-        Log.i(TAG, "Ready")
-    }
+//    /** Set up targets to receive log data  */
+//    open fun initializeLogging() {
+//        // Using Log, front-end to the logging chain, emulates android.util.log method signatures.
+//        // Wraps Android's native log framework
+//        val logWrapper = LogWrapper()
+//        Log.logNode = logWrapper
+//
+//        Log.i(TAG, "Ready")
+//    }
 
     companion object {
         val TAG = "SampleActivityBase"

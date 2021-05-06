@@ -1,13 +1,17 @@
 package com.example.android.recyclerview
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.text.format.DateFormat.is24HourFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.recyclerview.databinding.ListItemArticleBinding
 import com.squareup.picasso.Picasso
-import android.text.format.DateFormat.is24HourFormat
 
 
 class ArticleViewHolder constructor(val rootView: View): RecyclerView.ViewHolder(rootView) {
@@ -30,9 +34,11 @@ class ArticleViewHolder constructor(val rootView: View): RecyclerView.ViewHolder
             val customDate = DateTimeConverter.toCustomDate(item.dateTime!!)
             val customTime = DateTimeConverter.toCustomTime(item.dateTime, use24HourClock)
             binding.txtDatetime.text = "$customDate, $customTime"
-            Picasso.get().load(item.image).into(binding.imageArticle)
-
+            Picasso.get()
+                    .load(item.image)
+                    .placeholder(R.drawable.ic_baseline_sync_24)
+                    .error(R.drawable.ic_baseline_error_outline_24)
+                    .into(binding.imageArticle)
         }
     }
-
 }

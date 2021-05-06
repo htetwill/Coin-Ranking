@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="snackbar_primary">#E53935</color>
+    <color name="snackbar_surface">#B71C1C</color>
+    <color name="snackbar_text">#FFFFFF</color>
+</resources>

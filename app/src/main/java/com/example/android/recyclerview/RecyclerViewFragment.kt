@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,14 +30,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.android.recyclerview.databinding.RecyclerViewFragBinding
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-/**
- * Demonstrates the use of [RecyclerView] with a [LinearLayoutManager] and a
- * [GridLayoutManager].
- */
+import okhttp3.Dispatcher
 
 //TODO:
 // 1 show UI with preview
@@ -50,7 +49,7 @@ class RecyclerViewFragment : Fragment() {
     private val mAdapter = CustomAdapter()
     private val viewModel by lazy {
         val db = Room.databaseBuilder(
-                context!!,
+                requireActivity(),
                 CarDatabase::class.java, "db"
         ).build()
 
@@ -75,7 +74,6 @@ class RecyclerViewFragment : Fragment() {
         currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER
 
         if (savedInstanceState != null) {
-            // Restore saved layout manager type.
             currentLayoutManagerType = savedInstanceState
                     .getSerializable(KEY_LAYOUT_MANAGER) as LayoutManagerType
         }
@@ -101,17 +99,10 @@ class RecyclerViewFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
-
-        // Save currently selected layout manager.
         savedInstanceState.putSerializable(KEY_LAYOUT_MANAGER, currentLayoutManagerType)
-
         super.onSaveInstanceState(savedInstanceState)
     }
 
-    /**
-     * Generates Strings for RecyclerView's adapter. This data would usually come
-     * from a local content provider or remote server.
-     */
     private fun initDataset() {
         viewModel.resultOfPost.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
@@ -119,12 +110,12 @@ class RecyclerViewFragment : Fragment() {
                     if (result.value.content!!.isNotEmpty()) {
                         binding.swiperefresh.isRefreshing = false
                         viewModel.refreshUI(result.value.content)
-                        Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireActivity(), "SUCCESS", Toast.LENGTH_SHORT).show()
                     } else {
                         binding.swiperefresh.isRefreshing = false
                         CoroutineScope(Dispatchers.IO).launch {
                             Room.databaseBuilder(
-                                    context!!,
+                                    requireActivity(),
                                     CarDatabase::class.java, "db"
                             ).build().clearAllTables()
                         }
@@ -132,12 +123,20 @@ class RecyclerViewFragment : Fragment() {
                 }
                 // here as well
                 is ResultOf.Failure -> {
-                    Toast.makeText(context, "ERROR ${result.message}", Toast.LENGTH_SHORT).show()
-//                    showErrorMessage(result.message ?: "Unknown error message")
+                    getSnackbar("ERROR ${result.message}").show()
+                    binding.swiperefresh.isRefreshing = false
                 }
             }
         })
     }
+
+    private fun getSnackbar(msg : String) : Snackbar {
+        val snackbar = Snackbar.make(binding.layoutCoordinator, msg, LENGTH_SHORT)
+        snackbar.view.setBackgroundColor(ContextCompat.getColor(requireActivity(),R.color.snackbar_primary))
+        snackbar.setActionTextColor(ContextCompat.getColor(requireActivity(),R.color.snackbar_text))
+        return snackbar
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
