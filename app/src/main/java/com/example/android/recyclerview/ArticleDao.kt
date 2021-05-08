@@ -15,6 +15,9 @@ interface ArticleDao {
     @Query("SELECT * FROM Article")
     fun getAll(): DataSource.Factory<Int, Article>
 
+    @Query("SELECT * FROM Article")
+    fun getAllInList(): List<Article>
+
     @Query("SELECT * FROM Article WHERE created = (SELECT MAX(created) FROM Article )")
     suspend fun lastArticle(): Article
 }

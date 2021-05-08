@@ -1,15 +1,12 @@
 package com.example.android.recyclerview
 
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import retrofit2.HttpException
-import java.lang.Exception
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ArticleRepository private constructor(private val dao : ArticleDao){
     private val pagedListConfig = PagedList.Config.Builder()

@@ -21,4 +21,6 @@
     <string name="linear_layout_manager">Linear Layout Manager</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>
     <string name="datetime_sample">25.05.2018 14:13</string>
+    <string name="error_unknown">Unknown Error</string>
+    <string name="error_internal_server">Internal Server Error</string>
 </resources>

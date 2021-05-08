@@ -1,50 +1,41 @@
 package com.example.android.recyclerview
 
-import androidx.annotation.UiThread
 import androidx.lifecycle.*
 import androidx.paging.PagedList
-import com.example.android.common.logger.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class RecyclerViewFragmentViewModel(private val repo: ArticleRepository): ViewModel() {
-    // Expose to the outside world
-    private val post: MutableLiveData<ResultOf<Post>> by lazy {
-        MutableLiveData<ResultOf<Post>>().also {
-                fetchPost()
-        }
+class RecyclerViewFragmentViewModel(private val repo: ArticleRepository) : ViewModel() {
+    private val post: MutableLiveData<ResultOf<Post>> = MutableLiveData()
+    val pagedList: LiveData<PagedList<Article>> = repo.getList()
+
+    init {
+        viewModelScope.launch { fetchPost() }
     }
 
-    val pagedList: LiveData<PagedList<Article>> = repo.getList()
-    val resultOfPost: LiveData<ResultOf<Post>> = post
+    fun getPost(): LiveData<ResultOf<Post>> = post
 
     fun refreshUI(listOfArticle: List<Article>?) {
-        Log.d("TAG", "refreshUI: ")
         if (listOfArticle != null && listOfArticle.isNotEmpty()) {
             //TODO comparing two list (remote vs local) with update date properties https://stackoverflow.com/questions/52054104/comparing-two-lists-in-kotlin
             repo.save(listOfArticle)
         }
     }
 
+
     fun fetchPost() {
         val service = RetrofitFactory.makeRetrofitService()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = service.getPosts()
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        post.postValue(ResultOf.Success(response.body()!!))
-                    } else {
-                        post.postValue(ResultOf.Failure("Error: ${response.code()}", null))
-                    }
-                }
+                if (response.isSuccessful) post.postValue(ResultOf.Success(response.body()!!))
+                else post.postValue(ResultOf.Failure("Error: ${response.code()}. Please contact the developer", Exception()))
             } catch (e: HttpException) {
-                    post.postValue(ResultOf.Failure(null, e))
+                post.postValue(ResultOf.Failure(e.message, e))
             } catch (e: Throwable) {
-                    post.postValue(ResultOf.Failure(null, e))
+                post.postValue(ResultOf.Failure(e.message, e))
             }
         }
     }
