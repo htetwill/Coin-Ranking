@@ -1,20 +1,16 @@
 package com.example.android.recyclerview
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
 import android.text.format.DateFormat.is24HourFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.recyclerview.databinding.ListItemArticleBinding
 import com.squareup.picasso.Picasso
 
 
-class ArticleViewHolder constructor(val rootView: View): RecyclerView.ViewHolder(rootView) {
+class ArticleViewHolder constructor(private val rootView: View): RecyclerView.ViewHolder(rootView) {
     private val binding = ListItemArticleBinding.bind(rootView)
 
     companion object {

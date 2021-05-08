@@ -10,13 +10,18 @@ import kotlinx.coroutines.launch
 
 class ArticleRepository private constructor(private val dao : ArticleDao){
     private val pagedListConfig = PagedList.Config.Builder()
-            .setPageSize(20)
+            .setPageSize(6)
             .setEnablePlaceholders(false)
             .build()
 
     fun save(articles: List<Article>){
         CoroutineScope(Dispatchers.IO).launch {
             dao.insertAll(articles)
+        }
+    }
+    fun delete(id : Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.deleteItemById(id)
         }
     }
 

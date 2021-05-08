@@ -19,12 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-//TODO:
-// 1 show UI with preview
-// 2 retrieve database to display
-// 3 loading indicator to check internet
-// 4 overwrite with new data
-// 5 display updated data with animation
+@Suppress("SpellCheckingInspection")
 
 class RecyclerViewFragment : Fragment() {
 
@@ -48,7 +43,7 @@ class RecyclerViewFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         _binding = RecyclerViewFragBinding.inflate(inflater, container, false)
         val rootView = binding.root
         layoutManager = LinearLayoutManager(activity)
@@ -63,16 +58,14 @@ class RecyclerViewFragment : Fragment() {
         binding.recyclerView.adapter = mAdapter
         viewModel.pagedList.observe(viewLifecycleOwner, Observer { articles ->
             mAdapter.submitList(articles)
-            if(articles.isEmpty())
-                getSnackbar(getString(R.string.error_internal_server)).show()
         })
-        setRecyclerViewLayoutManager(LayoutManagerType.LINEAR_LAYOUT_MANAGER)
+        setRecyclerViewLayoutManager()
         initDataset()
 
         return rootView
     }
 
-    private fun setRecyclerViewLayoutManager(layoutManagerType: LayoutManagerType) {
+    private fun setRecyclerViewLayoutManager() {
         layoutManager = LinearLayoutManager(activity)
         currentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER
         with(binding.recyclerView) {

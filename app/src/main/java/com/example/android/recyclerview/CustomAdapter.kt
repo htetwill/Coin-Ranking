@@ -24,10 +24,6 @@ class CustomAdapter : PagedListAdapter<Article,ArticleViewHolder>(object : DiffU
         return ArticleViewHolder.from(parent)
     }
 
-    companion object {
-        private val TAG = "CustomAdapter"
-    }
-
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         holder.setValue(getItem(position))
     }

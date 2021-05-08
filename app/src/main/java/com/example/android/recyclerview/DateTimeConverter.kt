@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+@Suppress("SpellCheckingInspection")
 class DateTimeConverter {
     companion object {
         @SuppressLint("SimpleDateFormat")

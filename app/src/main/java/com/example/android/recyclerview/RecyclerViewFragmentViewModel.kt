@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
+@Suppress("SpellCheckingInspection")
 class RecyclerViewFragmentViewModel(private val repo: ArticleRepository) : ViewModel() {
     private val post: MutableLiveData<ResultOf<Post>> = MutableLiveData()
     val pagedList: LiveData<PagedList<Article>> = repo.getList()
@@ -19,7 +20,13 @@ class RecyclerViewFragmentViewModel(private val repo: ArticleRepository) : ViewM
 
     fun refreshUI(listOfArticle: List<Article>?) {
         if (listOfArticle != null && listOfArticle.isNotEmpty()) {
-            //TODO comparing two list (remote vs local) with update date properties https://stackoverflow.com/questions/52054104/comparing-two-lists-in-kotlin
+            val changedList = listOfArticle.filterIndexed{
+                _, value ->
+                !pagedList.value!!.contains(value)
+            }
+            for (value in changedList) {
+                repo.delete(value.id)
+            }
             repo.save(listOfArticle)
         }
     }

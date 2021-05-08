@@ -1,7 +1,6 @@
 package com.example.android.recyclerview
 
 import androidx.paging.DataSource
-import androidx.paging.PagedList
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -20,4 +19,8 @@ interface ArticleDao {
 
     @Query("SELECT * FROM Article WHERE created = (SELECT MAX(created) FROM Article )")
     suspend fun lastArticle(): Article
+
+    @Query("DELETE FROM Article WHERE id = :articleId")
+    suspend fun deleteItemById(articleId : Int)
+
 }

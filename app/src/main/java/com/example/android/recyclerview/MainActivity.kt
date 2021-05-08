@@ -18,7 +18,4 @@ class MainActivity : SampleActivityBase() {
         }
     }
 
-    companion object {
-        val TAG = "MainActivity"
-    }
 }
