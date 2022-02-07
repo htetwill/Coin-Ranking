@@ -1,23 +1,48 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.example.android.recyclerview"
-        minSdkVersion 21
-        targetSdkVersion 27
+        minSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_11
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix ".development"
+            manifestPlaceholders.firebasecrashlyticsCollectionEnabled = false
+            buildConfigField "String", "BASE_URL", "\"https://develop.mmblur.com/api/\""
+        }
+
+        stage {
+            applicationIdSuffix ".stage"
+            debuggable true
+            buildConfigField "String", "BASE_URL", "\"https://stage.mmblur.com/api/\""
+        }
+
         release {
+            debuggable false
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\"https://production.mmblur.com/api/\""
+        }
+
+        releaseTest {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\"https://production.mmblur.com/api/\""
         }
     }
 
@@ -25,19 +50,18 @@ android {
         viewBinding true
     }
 
-    lintOptions {
-        abortOnError false
-    }
-
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+    lint {
+        abortOnError false
     }
 }
 
 dependencies {
     def lifecycle_version = "2.3.1"
     def appcompat_version = "1.2.0"
-    def room_version = "2.3.0"
+    def room_version = "2.4.1"
     def paging_version = "2.1.2"
 
     androidTestImplementation 'androidx.test:runner:1.3.0'
