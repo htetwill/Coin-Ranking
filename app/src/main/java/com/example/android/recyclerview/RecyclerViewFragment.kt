@@ -14,7 +14,6 @@ import androidx.room.Room
 import com.example.android.recyclerview.databinding.RecyclerViewFragBinding
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.recycler_view_frag.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -107,7 +106,7 @@ class RecyclerViewFragment : Fragment() {
         snackbar.view.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.snackbar_primary))
         snackbar.setAction("Refresh") {
             binding.swiperefresh.post {
-                swiperefresh.isRefreshing = true
+                binding.swiperefresh.isRefreshing = true
                 viewModel.fetchPost()
             }
         }
