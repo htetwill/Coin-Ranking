@@ -2,6 +2,7 @@ package com.example.android.recyclerview
 
 import androidx.lifecycle.*
 import androidx.paging.PagedList
+import com.example.android.data.usecase.FetchAndSaveDataUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -9,14 +10,14 @@ import retrofit2.HttpException
 
 @Suppress("SpellCheckingInspection")
 class RecyclerViewFragmentViewModel(private val repo: ArticleRepository) : ViewModel() {
-    private val post: MutableLiveData<ResultOf<Post>> = MutableLiveData()
+    private val post: MutableLiveData<ResultOf<PostModel>> = MutableLiveData()
     val pagedList: LiveData<PagedList<Article>> = repo.getList()
 
     init {
         viewModelScope.launch { fetchPost() }
     }
 
-    fun getPost(): LiveData<ResultOf<Post>> = post
+    fun getPost(): LiveData<ResultOf<PostModel>> = post
 
     fun refreshUI(listOfArticle: List<Article>?) {
         if (listOfArticle != null && listOfArticle.isNotEmpty()) {
@@ -33,18 +34,19 @@ class RecyclerViewFragmentViewModel(private val repo: ArticleRepository) : ViewM
 
 
     fun fetchPost() {
-        val service = RetrofitFactory.makeRetrofitService()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = service.getPosts()
-                if (response.isSuccessful) post.postValue(ResultOf.Success(response.body()!!))
-                else post.postValue(ResultOf.Failure("Error: ${response.code()}. Please contact the developer", Exception()))
-            } catch (e: HttpException) {
-                post.postValue(ResultOf.Failure(e.message, e))
-            } catch (e: Throwable) {
-                post.postValue(ResultOf.Failure(e.message, e))
-            }
-        }
+
+//        val service = RetrofitModule.makeRetrofitService()
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                val response = service.getPosts()
+//                if (response.isSuccessful) post.postValue(ResultOf.Success(response.body()!!))
+//                else post.postValue(ResultOf.Failure("Error: ${response.code()}. Please contact the developer", Exception()))
+//            } catch (e: HttpException) {
+//                post.postValue(ResultOf.Failure(e.message, e))
+//            } catch (e: Throwable) {
+//                post.postValue(ResultOf.Failure(e.message, e))
+//            }
+//        }
     }
 
     class Factory(private val repo: ArticleRepository) : ViewModelProvider.Factory {

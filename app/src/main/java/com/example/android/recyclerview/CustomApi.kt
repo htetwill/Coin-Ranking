@@ -1,9 +1,10 @@
 package com.example.android.recyclerview
 
+import com.example.android.data.response.PostResponse
 import retrofit2.Response
 import retrofit2.http.GET
 
-interface RetrofitInterface {
+interface CustomApi {
     @GET("application/119267/article/get_articles_list")
-    suspend fun getPosts(): Response<Post>
+    suspend fun fetchPost(): Response<PostResponse>
 }

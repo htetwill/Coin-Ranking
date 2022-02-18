@@ -1,5 +1,4 @@
-import com.example.android.recyclerview.RetrofitFactory
-import com.example.android.recyclerview.RetrofitInterface
+import com.example.android.recyclerview.CustomApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -11,21 +10,21 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 
 class RequestResponseTest {
-    private lateinit var apiHelper: RetrofitInterface
+    private lateinit var apiHelper: CustomApi
 
     @Before
     fun setup() {
-        apiHelper = RetrofitFactory.makeRetrofitService()
+//        apiHelper = RetrofitModule.makeRetrofitService()
     }
 
     @Test
     fun fetchAndCheck200Code() = runBlocking {
-        val actualResponse = apiHelper.getPosts()
+        val actualResponse = apiHelper.fetchPost()
         assertEquals(actualResponse.isSuccessful, true)
     }
     @Test
     fun fetchAndCheckArticle() = runBlocking {
-        val actualResponse = apiHelper.getPosts()
+        val actualResponse = apiHelper.fetchPost()
         assertNotNull(actualResponse.body())
     }
 }
