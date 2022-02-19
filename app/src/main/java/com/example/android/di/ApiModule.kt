@@ -13,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -31,8 +32,14 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(cache: Cache?): OkHttpClient {
+        val interceptor : HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
         val client = OkHttpClient.Builder()
         client.cache(cache)
+        client.apply {
+            addInterceptor(interceptor)
+        }
         return client.build()
     }
 
@@ -52,7 +59,9 @@ class ApiModule {
     }
 
     private fun getRetrofit(baseUrl: String, gson: Gson, okHttpClient: OkHttpClient): Retrofit {
-        val baseUrl = "https://www.apphusetreach.no/"
+//        val baseUrl = "https://www.apphusetreach.no/"
+
+        val baseUrl = "https://api.coinranking.com/v2/"
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(baseUrl)

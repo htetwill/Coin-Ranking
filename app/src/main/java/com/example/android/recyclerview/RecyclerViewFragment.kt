@@ -29,7 +29,7 @@ import javax.inject.Inject
 class RecyclerViewFragment : Fragment() ,Injectable{
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
-    private val mAdapter = CustomAdapter()
+    private val mAdapter = CoinListAdapter()
     private lateinit var v2ViewModel: V2RecyclerViewFragmentViewModel
 
     private val viewModel by lazy {

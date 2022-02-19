@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
  * Provide views to RecyclerView with data from LiveData.
  *
  */
-class CustomAdapter : PagedListAdapter<Article,CoinViewHolder>(object : DiffUtil
+class CoinListAdapter : PagedListAdapter<Article,CoinViewHolder>(object : DiffUtil
 .ItemCallback<Article>() {
     override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
         return oldItem.id == newItem.id

@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.gson.GsonBuilder
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
 
 
 inline fun <reified T : Any> Any.mapTo(): T =

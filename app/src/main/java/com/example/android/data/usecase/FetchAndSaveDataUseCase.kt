@@ -11,15 +11,13 @@ import javax.inject.Inject
 class FetchAndSaveDataUseCase @Inject constructor(
     private val mApplicationRepository: ApplicationRepository) {
     suspend fun invoke(value: Unit): Event<Unit> {
-        when(val fetchPostResponse = mApplicationRepository.fetchPost()) {
-            is SuccessEvent -> {
-                fetchPostResponse.data.run {
-                    Log.wtf("", this.toString())
+        when(val fetchPostResponse = mApplicationRepository.fetchData()) {
+            is SuccessEvent -> fetchPostResponse.data.run {
+                    this!!.data.coins.forEach {
+                        Log.wtf("FetchAndSaveDataUseCase", it.rank.toString())
+                    }
                 }
-            }
-            is ErrorEvent -> {
-                return ErrorEvent(fetchPostResponse.error)
-            }
+            is ErrorEvent -> return ErrorEvent(fetchPostResponse.error)
         }
         return SuccessEvent(Unit)
     }
