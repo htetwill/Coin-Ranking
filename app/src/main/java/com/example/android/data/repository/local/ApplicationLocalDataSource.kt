@@ -63,7 +63,7 @@ class ApplicationLocalDataSource  @Inject constructor(
         }
     }
     private val coinListLiveData = MutableLiveData<EventHandler<PagedList<CoinModel>>>()
-    private val PAGED_LIST_PAGE_SIZE = 5
+    private val PAGED_LIST_PAGE_SIZE = 20
 
     override fun getData(): LiveData<EventHandler<PagedList<CoinModel>>> {
         val pagedListConfig = PagedList.Config.Builder()

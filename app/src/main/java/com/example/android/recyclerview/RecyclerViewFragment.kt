@@ -24,8 +24,8 @@ import javax.inject.Inject
 
 class RecyclerViewFragment : Fragment() ,Injectable{
 
+    private lateinit var mAdapter: CoinListAdapter
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
-    private val mAdapter = CoinListAdapter()
     private lateinit var v2ViewModel: V2RecyclerViewFragmentViewModel
 
     private lateinit var currentLayoutManagerType: LayoutManagerType
@@ -50,14 +50,19 @@ class RecyclerViewFragment : Fragment() ,Injectable{
 
         v2ViewModel = viewModel(mViewModelFactory)
         binding.swiperefresh.setOnRefreshListener(v2ViewModel::fetchData)
-        binding.recyclerView.adapter = mAdapter
         setRecyclerViewLayoutManager()
+        initAdapter()
         initObserver()
+        initRecyclerView()
         initData()
 
 
 
         return rootView
+    }
+
+    private fun initRecyclerView() {
+        binding.recyclerView.adapter = mAdapter
     }
 
     private fun initData() {
@@ -85,15 +90,33 @@ class RecyclerViewFragment : Fragment() ,Injectable{
     }
 
     private fun observeGetAllData() {
-       observeSingle(v2ViewModel.getDataLiveData,{
+        observePeek(v2ViewModel.getDataLiveData,{
            if(it.isNotEmpty()) {
-               initAdapter(it)
+               mAdapter.updateList(it)
            }
        })
     }
 
-    private fun initAdapter(list: List<CoinModel>) {
-        mAdapter.updateList(list)
+    private fun initAdapter() {
+        mAdapter = CoinListAdapter() {
+            onItemClicked(it)
+        }
+    }
+
+    private fun onItemClicked(event: ListItemEvent) {
+        when(event) {
+            is ListItemEvent.ItemClicked -> {
+                Toast.makeText(this.context, "Clicked", Toast.LENGTH_SHORT).show()
+                // TODO: 2022-02-22,3:11 htetwill WIP
+/*
+                navigationController().navigate(
+                    OffersFragmentDirections.actionFragmentOffersToFragmentOfferPreview(
+                        event.contentPreviewModel.id
+                    )
+                )
+*/
+            }
+        }
     }
 
     private fun observeFetch() {

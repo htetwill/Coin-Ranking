@@ -11,6 +11,17 @@ import com.example.android.data.event.SuccessEvent
 import com.example.android.data.util.isNull
 import com.example.android.error.CustomError
 
+fun <T : Any, L : LiveData<EventHandler<T>>> Fragment.observePeek(
+    liveData: L,
+    onSuccess: (data: T) -> Unit,
+    onError: ((error: CustomError) -> Unit)? = null,
+    onLoading: (() -> Unit)? = null,
+    onHideLoading: (() -> Unit)? = null
+) {
+    observe(liveData, onSuccess, onError, onLoading, onHideLoading, false)
+}
+
+
 fun <T : Any, L : LiveData<EventHandler<T>>> Fragment.observeSingle(
     liveData: L,
     onSuccess: (data: T) -> Unit,

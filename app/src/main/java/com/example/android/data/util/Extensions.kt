@@ -3,7 +3,6 @@ package com.example.android.data.util
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.gson.GsonBuilder
 
 
@@ -25,4 +24,9 @@ fun Any?.isNull(onNull: () -> Unit) {
     if (this == null) {
         onNull.invoke()
     }
+}
+
+fun String.isPositive(): Boolean {
+    val value: Double = this.toDouble()
+    return value >= 0
 }

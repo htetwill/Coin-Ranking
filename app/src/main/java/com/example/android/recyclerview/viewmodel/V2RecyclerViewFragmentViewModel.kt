@@ -33,7 +33,6 @@ class V2RecyclerViewFragmentViewModel @Inject constructor(
 
 
     fun fetchData() {
-        // // TODO: 2022-02-15,23:37 htetwill work in progress
         _fetchTrigger.postValue(EventHandler.loading())
         CoroutineScope(Dispatchers.IO).launch {
             _fetchTrigger.postValue(EventHandler(mFetchAndSaveDataUseCase.invoke(Unit)))

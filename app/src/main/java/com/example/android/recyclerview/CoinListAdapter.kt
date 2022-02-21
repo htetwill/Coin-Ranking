@@ -1,15 +1,14 @@
 package com.example.android.recyclerview
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.example.android.data.modal.CoinModel
+import com.example.android.recyclerview.databinding.ListItemCoinBinding
 
-/**
- * Provide views to RecyclerView with data from LiveData.
- *
- */
-class CoinListAdapter : ListAdapter<CoinModel,CoinViewHolder>(object : DiffUtil
+class CoinListAdapter ( val mListItemEvent: (ListItemEvent) -> Unit): ListAdapter<CoinModel,RecyclerView.ViewHolder>(object : DiffUtil
 .ItemCallback<CoinModel>() {
     override fun areItemsTheSame(oldItem: CoinModel, newItem: CoinModel): Boolean {
         return oldItem.uuid == newItem.uuid
@@ -21,12 +20,15 @@ class CoinListAdapter : ListAdapter<CoinModel,CoinViewHolder>(object : DiffUtil
 })
 {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinViewHolder {
-        return CoinViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            return CoinViewHolder(ListItemCoinBinding.inflate(LayoutInflater.from(parent.context), parent, false), mListItemEvent)
     }
 
-    override fun onBindViewHolder(holder: CoinViewHolder, position: Int) {
-        holder.setValue(getItem(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        getItem(position).let {
+            val listItemHolder = holder as ListItemHolder
+            listItemHolder.bind(it)
+        }
     }
 
     private var mItems = mutableListOf<CoinModel>()
@@ -36,5 +38,4 @@ class CoinListAdapter : ListAdapter<CoinModel,CoinViewHolder>(object : DiffUtil
         mItems.addAll(list)
         submitList(list)
     }
-
 }
