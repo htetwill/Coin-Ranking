@@ -1,20 +1,21 @@
 package com.example.android.recyclerview
 
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import com.example.android.data.modal.CoinModel
 
 /**
  * Provide views to RecyclerView with data from LiveData.
  *
  */
-class CoinListAdapter : PagedListAdapter<Article,CoinViewHolder>(object : DiffUtil
-.ItemCallback<Article>() {
-    override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
-        return oldItem.id == newItem.id
+class CoinListAdapter : ListAdapter<CoinModel,CoinViewHolder>(object : DiffUtil
+.ItemCallback<CoinModel>() {
+    override fun areItemsTheSame(oldItem: CoinModel, newItem: CoinModel): Boolean {
+        return oldItem.uuid == newItem.uuid
     }
 
-    override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+    override fun areContentsTheSame(oldItem: CoinModel, newItem: CoinModel): Boolean {
         return oldItem == newItem
     }
 })
@@ -27,4 +28,13 @@ class CoinListAdapter : PagedListAdapter<Article,CoinViewHolder>(object : DiffUt
     override fun onBindViewHolder(holder: CoinViewHolder, position: Int) {
         holder.setValue(getItem(position))
     }
+
+    private var mItems = mutableListOf<CoinModel>()
+
+    fun updateList(list: List<CoinModel>) {
+        mItems.clear()
+        mItems.addAll(list)
+        submitList(list)
+    }
+
 }

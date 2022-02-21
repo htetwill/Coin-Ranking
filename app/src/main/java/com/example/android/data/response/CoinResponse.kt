@@ -10,25 +10,15 @@ data class CoinResponse(
     val symbol: String,
     val name: String,
     val color: String? = null,
-
-    @SerializedName("iconUrl")
-    val iconURL: String,
-
+    val iconUrl: String,
     val marketCap: String,
     val price: String,
     val listedAt: Long,
     val tier: Long,
     val change: String,
     val rank: Long,
-    val sparkline: List<String>,
     val lowVolume: Boolean,
-
-    @SerializedName("coinrankingUrl")
-    val coinrankingURL: String,
-
-    @SerializedName("24hVolume")
-    val the24hVolume: String,
-
+    val coinrankingUrl: String,
     val btcPrice: String
 ): IDtoModelMapper<CoinResponse, CoinModel> {
     override fun map(value: CoinResponse): CoinModel {

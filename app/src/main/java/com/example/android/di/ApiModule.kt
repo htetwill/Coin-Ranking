@@ -1,11 +1,15 @@
 package com.example.android.di
 
 import android.app.Application
+import androidx.room.Room
 import com.example.android.data.repository.ApplicationDataSource
+import com.example.android.data.repository.local.ApplicationLocalDataSource
 import com.example.android.data.repository.remote.ApplicationRemoteDataSource
-import com.example.android.di.annotation.CustomAnnotation
+import com.example.android.di.annotation.Local
 import com.example.android.di.annotation.Remote
 import com.example.android.recyclerview.BuildConfig
+import com.example.android.recyclerview.CarDatabase
+import com.example.android.recyclerview.CoinDao
 import com.example.android.recyclerview.CustomApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -78,7 +82,28 @@ class ApiModule {
     @Singleton
     @Provides
     @Remote
-    fun bindApplicationRemoteDataSource(portierApi: CustomApi,  retrofit: Retrofit): ApplicationDataSource {
-        return ApplicationRemoteDataSource(portierApi, retrofit)
+    fun bindApplicationRemoteDataSource(customApi: CustomApi, retrofit: Retrofit): ApplicationDataSource {
+        return ApplicationRemoteDataSource(customApi, retrofit)
     }
+
+    @Singleton
+    @Provides
+    @Local
+    fun bindApplicationLocalDataSource(customDatabase: CarDatabase,coinDao: CoinDao): ApplicationDataSource {
+        return ApplicationLocalDataSource(customDatabase, coinDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDatabase(application: Application): CarDatabase {
+        return Room.databaseBuilder(application, CarDatabase::class.java, "custom.db")
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCoinDao(mDatabase: CarDatabase): CoinDao {
+        return mDatabase.coinDao()
+    }
+
 }

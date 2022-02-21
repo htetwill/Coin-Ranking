@@ -8,20 +8,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
+import com.example.android.data.modal.CoinModel
 import com.example.android.data.util.viewModel
 import com.example.android.di.annotation.Injectable
 import com.example.android.recyclerview.databinding.RecyclerViewFragBinding
 import com.example.android.recyclerview.viewmodel.V2RecyclerViewFragmentViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
@@ -32,16 +28,6 @@ class RecyclerViewFragment : Fragment() ,Injectable{
     private val mAdapter = CoinListAdapter()
     private lateinit var v2ViewModel: V2RecyclerViewFragmentViewModel
 
-    private val viewModel by lazy {
-        val db = Room.databaseBuilder(
-                requireActivity(),
-                CarDatabase::class.java, "db"
-        ).build()
-
-        ViewModelProvider(this, RecyclerViewFragmentViewModel.Factory(
-                ArticleRepository.getInstance(db.articleDao())
-        )).get(RecyclerViewFragmentViewModel::class.java)
-    }
     private lateinit var currentLayoutManagerType: LayoutManagerType
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private var _binding: RecyclerViewFragBinding? = null
@@ -62,19 +48,21 @@ class RecyclerViewFragment : Fragment() ,Injectable{
                     .getSerializable("KEY_LAYOUT_MANAGER") as LayoutManagerType
         }
 
-        binding.swiperefresh.setOnRefreshListener(viewModel::fetchPost)
-        binding.recyclerView.adapter = mAdapter
-        viewModel.pagedList.observe(viewLifecycleOwner, Observer { articles ->
-            mAdapter.submitList(articles)
-        })
-        setRecyclerViewLayoutManager()
-        initDataset()
         v2ViewModel = viewModel(mViewModelFactory)
+        binding.swiperefresh.setOnRefreshListener(v2ViewModel::fetchData)
+        binding.recyclerView.adapter = mAdapter
+        setRecyclerViewLayoutManager()
         initObserver()
+        initData()
 
 
 
         return rootView
+    }
+
+    private fun initData() {
+        v2ViewModel.fetchData()
+        v2ViewModel.getAllData()
     }
 
     private fun setRecyclerViewLayoutManager() {
@@ -91,13 +79,21 @@ class RecyclerViewFragment : Fragment() ,Injectable{
         super.onSaveInstanceState(savedInstanceState)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private fun initObserver() {
         observeFetch()
+        observeGetAllData()
     }
 
-    private fun initObserver() {
-        v2ViewModel.fetchData()
+    private fun observeGetAllData() {
+       observeSingle(v2ViewModel.getDataLiveData,{
+           if(it.isNotEmpty()) {
+               initAdapter(it)
+           }
+       })
+    }
+
+    private fun initAdapter(list: List<CoinModel>) {
+        mAdapter.updateList(list)
     }
 
     private fun observeFetch() {
@@ -112,36 +108,13 @@ class RecyclerViewFragment : Fragment() ,Injectable{
         }, onHideLoading = {}, onLoading = {})
     }
 
-    private fun initDataset() {
-        viewModel.getPost().observe(viewLifecycleOwner, Observer { result ->
-            binding.swiperefresh.isRefreshing = false
-            when (result) {
-                is ResultOf.Success -> {
-                    if (result.value.content!!.isNotEmpty()) {
-                        viewModel.refreshUI(result.value.content)
-                    } else {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            Room.databaseBuilder(
-                                    requireActivity(),
-                                    CarDatabase::class.java, "db"
-                            ).build().clearAllTables()
-                        }
-                    }
-                }
-                is ResultOf.Failure -> {
-                    result.message?.let { msg -> getSnackbar(msg).show() }
-                }
-            }
-        })
-    }
-
     private fun getSnackbar(msg: String): Snackbar {
         val snackbar = Snackbar.make(binding.layoutCoordinator, msg, LENGTH_INDEFINITE)
         snackbar.view.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.snackbar_primary))
         snackbar.setAction("Refresh") {
             binding.swiperefresh.post {
                 binding.swiperefresh.isRefreshing = true
-                viewModel.fetchPost()
+                v2ViewModel.fetchData()
             }
         }
         snackbar.setActionTextColor(ContextCompat.getColor(requireActivity(), R.color.snackbar_text))

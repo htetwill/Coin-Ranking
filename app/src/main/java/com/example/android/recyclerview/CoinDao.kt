@@ -1,0 +1,23 @@
+package com.example.android.recyclerview
+
+import androidx.paging.DataSource
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.example.android.data.modal.CoinModel
+
+@Dao
+interface CoinDao {
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertAll(coinList: List<CoinModel>): List<Long>
+
+    @Query("SELECT * FROM Coin")
+    fun getAll(): DataSource.Factory<Int, CoinModel>
+
+    @Query("SELECT * FROM Coin")
+    fun getAllInList(): List<CoinModel>
+
+    @Query("DELETE FROM Coin")
+    suspend fun deleteAll(): Int
+}
