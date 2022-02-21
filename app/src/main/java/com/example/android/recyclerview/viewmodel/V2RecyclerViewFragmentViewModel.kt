@@ -11,7 +11,6 @@ import com.example.android.data.repository.ApplicationRepository
 import com.example.android.data.usecase.FetchAndSaveDataUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +35,7 @@ class V2RecyclerViewFragmentViewModel @Inject constructor(
     fun fetchData() {
         // // TODO: 2022-02-15,23:37 htetwill work in progress
         _fetchTrigger.postValue(EventHandler.loading())
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             _fetchTrigger.postValue(EventHandler(mFetchAndSaveDataUseCase.invoke(Unit)))
         }
     }
