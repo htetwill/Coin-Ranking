@@ -5,10 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
 import com.example.android.data.modal.CoinModel
 import com.example.android.recyclerview.databinding.ListItemCoinBinding
 
-class CoinListAdapter ( val mListItemEvent: (ListItemEvent) -> Unit): ListAdapter<CoinModel,RecyclerView.ViewHolder>(object : DiffUtil
+class CoinListAdapter(
+    val mImageLoader: ImageLoader,
+    val mListItemEvent:(ListItemEvent)-> Unit ): ListAdapter<CoinModel,RecyclerView.ViewHolder>(object : DiffUtil
 .ItemCallback<CoinModel>() {
     override fun areItemsTheSame(oldItem: CoinModel, newItem: CoinModel): Boolean {
         return oldItem.uuid == newItem.uuid
@@ -21,7 +24,13 @@ class CoinListAdapter ( val mListItemEvent: (ListItemEvent) -> Unit): ListAdapte
 {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return CoinViewHolder(ListItemCoinBinding.inflate(LayoutInflater.from(parent.context), parent, false), mListItemEvent)
+            return CoinViewHolder(
+                ListItemCoinBinding.inflate(LayoutInflater.from(parent.context),
+                    parent,
+                    false),
+                mImageLoader,
+                mListItemEvent
+            )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

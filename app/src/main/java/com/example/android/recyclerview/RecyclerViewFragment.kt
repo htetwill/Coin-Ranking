@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.data.modal.CoinModel
+import coil.ImageLoader
 import com.example.android.data.util.viewModel
 import com.example.android.di.annotation.Injectable
 import com.example.android.recyclerview.databinding.RecyclerViewFragBinding
@@ -26,6 +26,7 @@ class RecyclerViewFragment : Fragment() ,Injectable{
 
     private lateinit var mAdapter: CoinListAdapter
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var mImageLoader : ImageLoader
     private lateinit var v2ViewModel: V2RecyclerViewFragmentViewModel
 
     private lateinit var currentLayoutManagerType: LayoutManagerType
@@ -98,7 +99,7 @@ class RecyclerViewFragment : Fragment() ,Injectable{
     }
 
     private fun initAdapter() {
-        mAdapter = CoinListAdapter() {
+        mAdapter = CoinListAdapter(mImageLoader) {
             onItemClicked(it)
         }
     }
@@ -106,7 +107,7 @@ class RecyclerViewFragment : Fragment() ,Injectable{
     private fun onItemClicked(event: ListItemEvent) {
         when(event) {
             is ListItemEvent.ItemClicked -> {
-                Toast.makeText(this.context, "Clicked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this.context, "onItemClicked: Clicked", Toast.LENGTH_SHORT).show()
                 // TODO: 2022-02-22,3:11 htetwill WIP
 /*
                 navigationController().navigate(
@@ -116,18 +117,17 @@ class RecyclerViewFragment : Fragment() ,Injectable{
                 )
 */
             }
-        }
-    }
+        } }
 
     private fun observeFetch() {
         observeSingle(v2ViewModel.fetchLiveData, {
             Log.w("", "observeFetch: Success")
-            Toast.makeText(this.context, "Success", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.context, "observeFetch: Success", Toast.LENGTH_SHORT).show()
 
 
         }, onError = {
             Log.w("", "observeFetch: Error")
-            Toast.makeText(this.context, "Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.context, "observeFetch: Error", Toast.LENGTH_SHORT).show()
         }, onHideLoading = {}, onLoading = {})
     }
 

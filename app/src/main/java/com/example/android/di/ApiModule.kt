@@ -2,6 +2,8 @@ package com.example.android.di
 
 import android.app.Application
 import androidx.room.Room
+import coil.ImageLoader
+import coil.decode.SvgDecoder
 import com.example.android.data.repository.ApplicationDataSource
 import com.example.android.data.repository.local.ApplicationLocalDataSource
 import com.example.android.data.repository.remote.ApplicationRemoteDataSource
@@ -24,6 +26,19 @@ import javax.inject.Singleton
 
 @Module
 class ApiModule {
+
+    @Provides
+    @Singleton
+    fun provideImageLoader(
+        application: Application,
+    ): ImageLoader {
+        return ImageLoader.Builder(application)
+            .crossfade(true)
+            .componentRegistry { add(SvgDecoder(application)) }
+            .crossfade(500)
+            .build()
+    }
+
 
     @Provides
     @Singleton

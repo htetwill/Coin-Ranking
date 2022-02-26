@@ -59,28 +59,24 @@ android {
 }
 
 dependencies {
-    def lifecycle_version = "2.3.1"
-    def appcompat_version = "1.2.0"
-    def room_version = "2.4.1"
-    def paging_version = "2.1.2"
+    // Kotlin
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     // Dependency Injector
-    def dagger_version = "2.40.5"
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
-
     // Network
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation "com.squareup.retrofit2:converter-gson:2.6.0" exclude module: 'httpclient'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version" exclude module: 'httpclient'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.7.2'
 
     //Logging Network Calls
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
-
 
     // ROOM
     implementation "androidx.room:room-runtime:$room_version"
@@ -88,33 +84,25 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
 
     // Image loader
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation("io.coil-kt:coil-base:1.4.0")
+    implementation("io.coil-kt:coil-svg:1.4.0")
 
     // Jetpack
     implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
-    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
-    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.3"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.2.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-    implementation "com.google.android.material:material:1.3.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    implementation "com.google.android.material:material:1.5.0"
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     testImplementation 'org.mockito:mockito-core:3.9.0'
 
     // Navigation
-    def nav_version = "2.4.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
-
-    // Kotlin
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
-
 }
