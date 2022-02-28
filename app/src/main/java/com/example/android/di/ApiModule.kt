@@ -10,9 +10,9 @@ import com.example.android.data.repository.remote.ApplicationRemoteDataSource
 import com.example.android.di.annotation.Local
 import com.example.android.di.annotation.Remote
 import com.example.android.recyclerview.BuildConfig
-import com.example.android.recyclerview.CarDatabase
 import com.example.android.recyclerview.CoinDao
 import com.example.android.recyclerview.CustomApi
+import com.example.android.recyclerview.CustomDatabase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -104,20 +104,20 @@ class ApiModule {
     @Singleton
     @Provides
     @Local
-    fun bindApplicationLocalDataSource(customDatabase: CarDatabase,coinDao: CoinDao): ApplicationDataSource {
+    fun bindApplicationLocalDataSource(customDatabase: CustomDatabase, coinDao: CoinDao): ApplicationDataSource {
         return ApplicationLocalDataSource(customDatabase, coinDao)
     }
 
     @Singleton
     @Provides
-    fun provideDatabase(application: Application): CarDatabase {
-        return Room.databaseBuilder(application, CarDatabase::class.java, "custom.db")
+    fun provideDatabase(application: Application): CustomDatabase {
+        return Room.databaseBuilder(application, CustomDatabase::class.java, "custom.db")
             .build()
     }
 
     @Singleton
     @Provides
-    fun provideCoinDao(mDatabase: CarDatabase): CoinDao {
+    fun provideCoinDao(mDatabase: CustomDatabase): CoinDao {
         return mDatabase.coinDao()
     }
 

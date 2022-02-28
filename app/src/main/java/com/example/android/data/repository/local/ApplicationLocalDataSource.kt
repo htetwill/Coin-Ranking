@@ -13,9 +13,8 @@ import com.example.android.data.modal.CoinModel
 import com.example.android.data.modal.CoinRankingModel
 import com.example.android.data.repository.ApplicationDataSource
 import com.example.android.error.ExceptionError
-import com.example.android.recyclerview.CarDatabase
 import com.example.android.recyclerview.CoinDao
-import com.example.android.recyclerview.PostModel
+import com.example.android.recyclerview.CustomDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -24,7 +23,7 @@ import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class ApplicationLocalDataSource  @Inject constructor(
-    private val mDatabase: CarDatabase,
+    private val mDatabase: CustomDatabase,
     private val mCoinDao: CoinDao
 ) : ApplicationDataSource, CoroutineScope{
     override val coroutineContext: CoroutineContext
@@ -37,10 +36,6 @@ class ApplicationLocalDataSource  @Inject constructor(
             e.printStackTrace()
             ErrorEvent(ExceptionError(e))
         }
-    }
-
-    override suspend fun fetchPost(): Event<PostModel> {
-        TODO("Not yet implemented")
     }
 
     override suspend fun fetchData(): Event<CoinRankingModel> {

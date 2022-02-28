@@ -24,7 +24,7 @@ class RecyclerViewFragment : Fragment() ,Injectable{
     private lateinit var mAdapter: CoinListAdapter
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var mImageLoader : ImageLoader
-    private lateinit var v2ViewModel: V2RecyclerViewFragmentViewModel
+    private lateinit var viewModel: V2RecyclerViewFragmentViewModel
 
     private lateinit var currentLayoutManagerType: LayoutManagerType
     private lateinit var layoutManager: RecyclerView.LayoutManager
@@ -46,8 +46,8 @@ class RecyclerViewFragment : Fragment() ,Injectable{
                     .getSerializable("KEY_LAYOUT_MANAGER") as LayoutManagerType
         }
 
-        v2ViewModel = viewModel(mViewModelFactory)
-        binding.viewModel = v2ViewModel
+        viewModel = viewModel(mViewModelFactory)
+        binding.viewModel = viewModel
         setRecyclerViewLayoutManager()
         initAdapter()
         initObserver()
@@ -64,7 +64,7 @@ class RecyclerViewFragment : Fragment() ,Injectable{
     }
 
     private fun initData() {
-        v2ViewModel.getAllData()
+        viewModel.getAllData()
     }
 
     private fun setRecyclerViewLayoutManager() {
@@ -87,7 +87,7 @@ class RecyclerViewFragment : Fragment() ,Injectable{
     }
 
     private fun observeGetAllData() {
-        observePeek(v2ViewModel.getDataLiveData,{
+        observePeek(viewModel.getDataLiveData,{
            if(it.isNotEmpty()) {
                mAdapter.updateList(it)
            }
@@ -116,15 +116,15 @@ class RecyclerViewFragment : Fragment() ,Injectable{
         } }
 
     private fun observeFetch() {
-        observeSingle(v2ViewModel.fetchLiveData, {
+        observeSingle(viewModel.fetchLiveData, {
                 Log.w("", "observeFetch: Success")
                 Toast.makeText(this.context, "observeFetch: Success", Toast.LENGTH_SHORT).show()
             }, onError = {
-                v2ViewModel.isLoading.set(false)
+                viewModel.isLoading.set(false)
                 Log.w("", "observeFetch: onError")
                 Toast.makeText(this.context, "observeFetch: onError", Toast.LENGTH_SHORT).show()
-            }, onHideLoading = {v2ViewModel.isLoading.set(false)},
-            onLoading = { v2ViewModel.isLoading.set(true) }
+            }, onHideLoading = {viewModel.isLoading.set(false)},
+            onLoading = { viewModel.isLoading.set(true) }
         )
     }
 

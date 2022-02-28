@@ -6,7 +6,6 @@ import com.example.android.data.event.Event
 import com.example.android.data.event.LoadingEvent
 import com.example.android.data.event.SuccessEvent
 import com.example.android.data.repository.ApplicationRepository
-import com.example.android.recyclerview.ResultOf
 import javax.inject.Inject
 
 class FetchAndSaveDataUseCase @Inject constructor(
