@@ -7,6 +7,7 @@
 - Java 11
 
 ## Running the program
+- Vanilla Android UI 
 - Build and Run is pretty straight forward since no API key were necessnary
 
 ## 3rd Party Library and license
@@ -16,6 +17,7 @@ Retrofit A type-safe HTTP client for Android and Java - Apache License
 - Dependency Injection Dagger 2
 - Kotlin coroutine 
 - Image Loader COIL
+- okHttp3 for efficient HTTP & HTTP/2 client
 
 ## Technical Consideration
 
