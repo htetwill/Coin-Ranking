@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.htetwill.coinranking.common.viewmodel.CustomViewModel"
+            />
+    </data>
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_coordinator"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/layout_coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ff000000"
-            />
+            app:refreshing="@{viewModel.isLoading}"
+            app:onRefreshListener="@{() -> viewModel.fetchData()}"
+            >
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
