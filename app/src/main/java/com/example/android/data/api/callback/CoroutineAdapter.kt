@@ -6,7 +6,6 @@ import com.example.android.data.event.ErrorEvent
 import com.example.android.data.event.Event
 import com.example.android.data.event.SuccessEvent
 import com.example.android.error.BackendError
-import com.example.android.error.CustomError
 import com.example.android.error.ErrorResponse
 import com.example.android.error.ExceptionError
 import retrofit2.Response
@@ -19,6 +18,9 @@ class CoroutineAdapter<T : IDtoModelMapper<T, F>, F> @Inject constructor(
 ) {
     operator fun invoke(): Event<F> {
         if(response.code() == 401) {
+            return ErrorEvent(ExceptionError(Exception()))
+        }
+        if(response.code() == 429) {
             return ErrorEvent(ExceptionError(Exception()))
         }
         return if(response.isSuccessful) {

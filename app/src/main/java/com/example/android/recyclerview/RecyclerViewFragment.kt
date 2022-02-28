@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +15,6 @@ import com.example.android.data.util.viewModel
 import com.example.android.di.annotation.Injectable
 import com.example.android.recyclerview.databinding.RecyclerViewFragBinding
 import com.example.android.recyclerview.viewmodel.V2RecyclerViewFragmentViewModel
-import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
-import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
@@ -50,7 +47,7 @@ class RecyclerViewFragment : Fragment() ,Injectable{
         }
 
         v2ViewModel = viewModel(mViewModelFactory)
-        binding.swiperefresh.setOnRefreshListener(v2ViewModel::fetchData)
+        binding.viewModel = v2ViewModel
         setRecyclerViewLayoutManager()
         initAdapter()
         initObserver()
@@ -67,7 +64,6 @@ class RecyclerViewFragment : Fragment() ,Injectable{
     }
 
     private fun initData() {
-        v2ViewModel.fetchData()
         v2ViewModel.getAllData()
     }
 
@@ -121,16 +117,18 @@ class RecyclerViewFragment : Fragment() ,Injectable{
 
     private fun observeFetch() {
         observeSingle(v2ViewModel.fetchLiveData, {
-            Log.w("", "observeFetch: Success")
-            Toast.makeText(this.context, "observeFetch: Success", Toast.LENGTH_SHORT).show()
-
-
-        }, onError = {
-            Log.w("", "observeFetch: Error")
-            Toast.makeText(this.context, "observeFetch: Error", Toast.LENGTH_SHORT).show()
-        }, onHideLoading = {}, onLoading = {})
+                Log.w("", "observeFetch: Success")
+                Toast.makeText(this.context, "observeFetch: Success", Toast.LENGTH_SHORT).show()
+            }, onError = {
+                v2ViewModel.isLoading.set(false)
+                Log.w("", "observeFetch: onError")
+                Toast.makeText(this.context, "observeFetch: onError", Toast.LENGTH_SHORT).show()
+            }, onHideLoading = {v2ViewModel.isLoading.set(false)},
+            onLoading = { v2ViewModel.isLoading.set(true) }
+        )
     }
 
+/*
     private fun getSnackbar(msg: String): Snackbar {
         val snackbar = Snackbar.make(binding.layoutCoordinator, msg, LENGTH_INDEFINITE)
         snackbar.view.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.snackbar_primary))
@@ -144,6 +142,7 @@ class RecyclerViewFragment : Fragment() ,Injectable{
         snackbar.setTextColor(ContextCompat.getColor(requireActivity(),R.color.snackbar_text))
         return snackbar
     }
+*/
 
     override fun onDestroy() {
         super.onDestroy()

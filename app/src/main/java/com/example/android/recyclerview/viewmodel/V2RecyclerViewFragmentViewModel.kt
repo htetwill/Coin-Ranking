@@ -1,5 +1,6 @@
 package com.example.android.recyclerview.viewmodel
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -21,6 +22,7 @@ class V2RecyclerViewFragmentViewModel @Inject constructor(
 
     private var _fetchTrigger = MutableLiveData<EventHandler<Unit>>()
     val fetchLiveData: LiveData<EventHandler<Unit>> = _fetchTrigger
+    val isLoading = ObservableBoolean()
 
     private val _getAllDataTrigger= MutableLiveData<String>()
     val getDataLiveData: LiveData<EventHandler<PagedList<CoinModel>>> = Transformations.switchMap(_getAllDataTrigger) {
