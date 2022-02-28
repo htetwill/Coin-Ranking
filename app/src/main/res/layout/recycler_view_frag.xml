@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.android.recyclerview.viewmodel.V2RecyclerViewFragmentViewModel"
+            type="com.htetwill.coinranking.common.viewmodel.CustomViewModel"
             />
     </data>
 
