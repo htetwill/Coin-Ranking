@@ -1,4 +1,4 @@
-package com.htetwill.coinranking.fragment
+package com.htetwill.coinranking.data.util
 
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,7 +8,6 @@ import com.htetwill.coinranking.data.event.DoneEvent
 import com.htetwill.coinranking.data.event.ErrorEvent
 import com.htetwill.coinranking.data.event.EventHandler
 import com.htetwill.coinranking.data.event.LoadingEvent
-import com.htetwill.coinranking.data.util.isNull
 import com.htetwill.coinranking.error.CustomError
 
 fun <T : Any, L : LiveData<EventHandler<T>>> Fragment.observePeek(

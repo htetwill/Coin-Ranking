@@ -16,12 +16,12 @@ import com.htetwill.coinranking.common.adapter.CoinHeaderAdapter
 import com.htetwill.coinranking.common.adapter.CoinListAdapter
 import com.htetwill.coinranking.common.viewmodel.CustomViewModel
 import com.htetwill.coinranking.data.event.ListItemEvent
+import com.htetwill.coinranking.data.util.observePeek
+import com.htetwill.coinranking.data.util.observeSingle
 import com.htetwill.coinranking.data.util.viewModel
 import com.htetwill.coinranking.di.annotation.Injectable
 import com.htetwill.coinranking.fragment.R
 import com.htetwill.coinranking.fragment.databinding.RecyclerViewFragBinding
-import com.htetwill.coinranking.fragment.observePeek
-import com.htetwill.coinranking.fragment.observeSingle
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")

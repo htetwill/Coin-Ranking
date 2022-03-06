@@ -1,4 +1,4 @@
-package com.htetwill.coinranking.fragment
+package com.htetwill.coinranking.common.viewholder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -7,6 +7,7 @@ import com.htetwill.coinranking.data.event.ListItemEvent
 import com.htetwill.coinranking.data.modal.CoinModel
 import com.htetwill.coinranking.data.util.isPositive
 import com.htetwill.coinranking.data.util.load
+import com.htetwill.coinranking.fragment.R
 import com.htetwill.coinranking.fragment.databinding.ListItemCoinBinding
 import com.htetwill.coinranking.fragment.databinding.ListItemCoinHeaderBinding
 

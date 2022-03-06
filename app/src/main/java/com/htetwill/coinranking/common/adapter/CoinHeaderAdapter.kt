@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.ImageLoader
+import com.htetwill.coinranking.common.viewholder.HeaderCoinViewHolder
+import com.htetwill.coinranking.common.viewholder.ListItemHolder
 import com.htetwill.coinranking.data.event.ListItemEvent
 import com.htetwill.coinranking.data.modal.CoinModel
-import com.htetwill.coinranking.fragment.HeaderCoinViewHolder
-import com.htetwill.coinranking.fragment.ListItemHolder
 import com.htetwill.coinranking.fragment.R
 import com.htetwill.coinranking.fragment.databinding.ListItemCoinHeaderBinding
 
