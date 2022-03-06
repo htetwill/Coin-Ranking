@@ -12,7 +12,7 @@ interface CoinDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertAll(coinList: List<CoinModel>): List<Long>
 
-    @Query("SELECT * FROM Coin")
+    @Query("SELECT * FROM Coin ORDER BY rank ASC")
     fun getAll(): DataSource.Factory<Int, CoinModel>
 
     @Query("SELECT * FROM Coin")

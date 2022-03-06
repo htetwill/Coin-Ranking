@@ -8,8 +8,8 @@ import com.htetwill.coinranking.error.CustomError
 
 data class EventHandler<out T>(val event: Event<out T>) {
     companion object {
-        fun <T> success(data: T?): EventHandler<T> {
-            return EventHandler(SuccessEvent(data))
+        fun <T> done(data: T?): EventHandler<T> {
+            return EventHandler(DoneEvent(data))
         }
 
         fun <T> error(error: CustomError): EventHandler<T> {

@@ -7,7 +7,7 @@ import com.htetwill.coinranking.error.CustomError
  */
 
 sealed class Event<T>
-data class SuccessEvent<T>(val data: T?) : Event<T>()
+data class DoneEvent<T>(val data: T?) : Event<T>()
 class LoadingEvent<T> : Event<T>()
 data class ErrorEvent<T>(val error: CustomError): Event<T>()
 

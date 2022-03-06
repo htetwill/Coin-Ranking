@@ -37,7 +37,7 @@ class CustomViewModel @Inject constructor(
     fun fetchData() {
         _fetchTrigger.postValue(EventHandler.loading())
         CoroutineScope(Dispatchers.IO).launch {
-            _fetchTrigger.postValue(EventHandler(mFetchAndSaveDataUseCase.invoke(Unit)))
+            _fetchTrigger.postValue(EventHandler(mFetchAndSaveDataUseCase.invoke()))
         }
     }
 }

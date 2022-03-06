@@ -7,10 +7,10 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.htetwill.coinranking.common.CustomDatabase
 import com.htetwill.coinranking.data.dao.CoinDao
+import com.htetwill.coinranking.data.event.DoneEvent
 import com.htetwill.coinranking.data.event.ErrorEvent
 import com.htetwill.coinranking.data.event.Event
 import com.htetwill.coinranking.data.event.EventHandler
-import com.htetwill.coinranking.data.event.SuccessEvent
 import com.htetwill.coinranking.data.modal.CoinModel
 import com.htetwill.coinranking.data.modal.CoinRankingModel
 import com.htetwill.coinranking.data.repository.ApplicationDataSource
@@ -31,7 +31,7 @@ class ApplicationLocalDataSource  @Inject constructor(
 
     override suspend fun clearDatabase(): Event<Unit> {
         return try {
-            SuccessEvent(mDatabase.clearAllTables())
+            DoneEvent(mDatabase.clearAllTables())
         }catch (e: Exception){
             e.printStackTrace()
             ErrorEvent(ExceptionError(e))
@@ -44,7 +44,7 @@ class ApplicationLocalDataSource  @Inject constructor(
 
     override suspend fun saveData(list: List<CoinModel>): Event<List<Long>> {
         return try {
-            SuccessEvent(mCoinDao.insertAll(list))
+            DoneEvent(mCoinDao.insertAll(list))
         } catch(e: Exception) {
             ErrorEvent(ExceptionError(e))
         }
@@ -52,7 +52,7 @@ class ApplicationLocalDataSource  @Inject constructor(
 
     override suspend fun deleteData(): Event<Int> {
         return try {
-            SuccessEvent(mCoinDao.deleteAll())
+            DoneEvent(mCoinDao.deleteAll())
         } catch (e: Exception) {
             ErrorEvent(ExceptionError(e))
         }
@@ -70,7 +70,7 @@ class ApplicationLocalDataSource  @Inject constructor(
             pagedListConfig
         ).build()
         return Transformations.switchMap(livePagedListOrder){
-            coinListLiveData.postValue(EventHandler.success(it))
+            coinListLiveData.postValue(EventHandler.done(it))
             return@switchMap coinListLiveData
         }
     }

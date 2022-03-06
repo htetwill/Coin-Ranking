@@ -1,5 +1,7 @@
 package com.htetwill.coinranking.data.util
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -29,4 +31,17 @@ fun Any?.isNull(onNull: () -> Unit) {
 fun String.isPositive(): Boolean {
     val value: Double = this.toDouble()
     return value >= 0
+}
+
+fun Context.isConnectedToNetwork(): Boolean {
+    try {
+        val connectivityManager = applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val activeNetwork = connectivityManager.activeNetworkInfo
+            return activeNetwork != null && activeNetwork.isConnected
+        }
+        return false
+    } catch (e: Exception) {
+        return false
+    }
 }

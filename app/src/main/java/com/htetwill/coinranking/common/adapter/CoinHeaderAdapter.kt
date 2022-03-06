@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.ImageLoader
 import com.htetwill.coinranking.data.event.ListItemEvent
 import com.htetwill.coinranking.data.modal.CoinModel
-import com.htetwill.coinranking.fragment.CoinViewHolder
+import com.htetwill.coinranking.fragment.HeaderCoinViewHolder
 import com.htetwill.coinranking.fragment.ListItemHolder
 import com.htetwill.coinranking.fragment.R
-import com.htetwill.coinranking.fragment.databinding.ListItemCoinBinding
+import com.htetwill.coinranking.fragment.databinding.ListItemCoinHeaderBinding
 
-class CoinListAdapter(
+class CoinHeaderAdapter(
     private val mImageLoader: ImageLoader,
     private val mListItemEvent:(ListItemEvent)-> Unit ): ListAdapter<CoinModel,RecyclerView.ViewHolder>(object : DiffUtil
 .ItemCallback<CoinModel>() {
@@ -28,12 +28,11 @@ class CoinListAdapter(
 {
 
     override fun getItemViewType(position: Int): Int {
-        return R.layout.list_item_coin
+        return R.layout.list_item_coin_header
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return CoinViewHolder(
-                ListItemCoinBinding.inflate(LayoutInflater.from(parent.context),
+            return HeaderCoinViewHolder(
+                ListItemCoinHeaderBinding.inflate(LayoutInflater.from(parent.context),
                     parent,
                     false),
                 mImageLoader,

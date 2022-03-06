@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.htetwill.coinranking.data.event.DoneEvent
 import com.htetwill.coinranking.data.event.ErrorEvent
 import com.htetwill.coinranking.data.event.EventHandler
 import com.htetwill.coinranking.data.event.LoadingEvent
-import com.htetwill.coinranking.data.event.SuccessEvent
 import com.htetwill.coinranking.data.util.isNull
 import com.htetwill.coinranking.error.CustomError
 
@@ -46,9 +46,9 @@ private fun <T : Any, L : LiveData<EventHandler<T>>> Fragment.observe(
                 val eventHandler = if (isSingleEvent) it.getContentIfNotHandled() else it.peekContent()
                 eventHandler?.let {
                     when (it.event) {
-                        is SuccessEvent -> {
+                        is DoneEvent -> {
                             onHideLoading?.invoke()
-                            onHideLoading.isNull { Log.wtf("ExtensionObserver", "SuccessEvent")}
+                            onHideLoading.isNull { Log.wtf("ExtensionObserver", "DoneEvent")}
                             it.event.data?.run{
                                 onSuccess(this)
                             }

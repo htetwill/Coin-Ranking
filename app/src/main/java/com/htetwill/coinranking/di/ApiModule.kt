@@ -1,6 +1,7 @@
 package com.htetwill.coinranking.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import coil.ImageLoader
 import coil.decode.SvgDecoder
@@ -27,6 +28,11 @@ import javax.inject.Singleton
 @Module
 class ApiModule {
 
+    @Singleton
+    @Provides
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
     @Provides
     @Singleton
     fun provideImageLoader(

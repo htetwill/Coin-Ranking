@@ -2,12 +2,13 @@ package com.htetwill.coinranking.data.api.callback
 
 import com.htetwill.coinranking.data.api.callback.CoroutineConverterUtil.convert
 import com.htetwill.coinranking.data.dto.IDtoModelMapper
+import com.htetwill.coinranking.data.event.DoneEvent
 import com.htetwill.coinranking.data.event.ErrorEvent
 import com.htetwill.coinranking.data.event.Event
-import com.htetwill.coinranking.data.event.SuccessEvent
 import com.htetwill.coinranking.error.BackendError
 import com.htetwill.coinranking.error.ErrorResponse
 import com.htetwill.coinranking.error.ExceptionError
+import org.json.JSONException
 import retrofit2.Response
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -21,11 +22,11 @@ class CoroutineAdapter<T : IDtoModelMapper<T, F>, F> @Inject constructor(
             return ErrorEvent(ExceptionError(Exception()))
         }
         if(response.code() == 429) {
-            return ErrorEvent(ExceptionError(Exception()))
+            return ErrorEvent(ExceptionError(JSONException("Rate limit exceeded. Clients may not make more than 5 requests per minute")))
         }
         return if(response.isSuccessful) {
             val responseBody = response.body()
-            SuccessEvent(if(responseBody != null) response.body()?.map(responseBody) else null)
+            DoneEvent(if(responseBody != null) response.body()?.map(responseBody) else null)
         } else {
             return try {
                 val errorResponse =

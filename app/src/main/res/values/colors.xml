@@ -3,4 +3,15 @@
     <color name="snackbar_primary">#E53935</color>
     <color name="snackbar_surface">#B71C1C</color>
     <color name="snackbar_text">#FFFFFF</color>
+
+    <!-- RED Theme -->
+    <color name="primaryColorRed">#F44336</color>
+    <color name="primaryLightColorRed">#FFCDD2</color>
+    <color name="primaryDarkColorRed">#D32F2F</color>
+    <color name="secondaryColorRed">#FFC107</color>
+    <color name="secondaryLightColorRed">#fccf4a</color>
+    <color name="secondaryDarkColorRed">#e1a902</color>
+    <color name="primaryTextColorRed">#ffffff</color>
+    <color name="secondaryTextColorRed">#000000</color>
+
 </resources>
